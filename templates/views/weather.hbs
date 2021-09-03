@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	{{>links}}
+	<title>Page Title</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+    
+
+    
+</head>
+<body>
+	<div class="containter-fluid main_menu">
+		<div class="row">
+			<div class = "col-md-10 col-12 mx-auto">
+				<nav class="navbar navbar-expand-lg ">
+					<a class="navbar-brand" href="#" > <i class="far fa-snowflake"></i> Weather<i class="far fa-snowflake"></i></a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					  <span class="navbar-toggler-icon"></span>
+					</button>
+				  
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					  <ul class="navbar-nav ml-auto">
+						<li class="nav-item active">
+						  <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+						</li>
+						<li class="nav-item">
+						  <a class="nav-link" href="/weather">Weather</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/about">About</a>
+						</li>
+
+
+					  </ul>
+					</div>
+				  </nav>
+				
+
+			</div>
+
+		</div>
+
+	</div>
+	<!-- main header -->
+	<div class="containter-fluid main_menu">
+		<div class="row">
+			<div class = "col-md-10 col-12 mx-auto">
+                <div class="main_content">
+                    <form class="temp_form">
+                        <input type = "text" id="cityName" placeholder="Enter City" autocomplete="off" >
+                        {{!-- <input type="submit" value="Search" id="submitBtn"> --}}
+                        <button type="submit" id="submitBtn">Search City</button>
+                    </form>
+                </div>
+                <div class="top_layer">
+                    <p id="day"></p>
+                    <p id="today_data"></p>
+
+                </div>
+                <div class="main_layer">
+                    <p id="city_name">Get Output Here</p>
+                    <div class="middle_layer data_hide">
+                        <p id="temp"><span>0</span> <sup>o</sup>C</p>
+                        <p id="temp_status"> <i class="fa fa-cloud" aria-hidden="true"></i></p>
+
+                    </div>
+
+                </div>
+		
+
+			</div>
+		</div>
+	</div>
+	<!-- footer code -->
+	{{>footer}}
+   <script>
+       const submitBtn = document.getElementById("submitBtn")
+       const cityName = document.getElementById("cityName")
+       const city_name = document.getElementById("city_name")
+       const temp_status = document.getElementById("temp_status")
+       const temp = document.getElementById("temp")
+       const data_hide = document.querySelector(".middle_layer")
+        const getInfo = async(event) =>{
+            event.preventDefault()
+            let cityVal = cityName.value
+            if(cityVal === ""){
+                city_name.innerText = `Please Enter City Name`
+                datahide.classList.add("data_hide")
+            }
+            else{
+                try{
+                    let url = `http://api.openweathermap.org/data/2.5/weather?q=${cityVal}&appid=e1cd2e7788fc7de91c7433af553a88d9`
+                    const response = await fetch(url);
+                    const data = await response.json()
+                    const arrData = [data]
+                    temp.innerText = arrData[0].main.temp
+                    temp_status.innerText = arrData[0].weather[0].main
+                    city_name.innerText = `${arrData[0].name} -- ${arrData[0].sys.country}`
+                    //console.log(arrData)
+                    const tempMood =  arrData[0].weather[0].main
+                    if(tempMood == "Clear"){
+                        temp_status.innerHTML = '<i class="fas fa-sun" style="color:#eccc68;"></i>'
+                    }else{
+                        temp_status.innerHTML = '<i class="fas fa-cloud" style="color:#eccc68;"></i>'
+                    }
+                }
+                catch{
+                    city_name.innerText = `City Not Found or Enter Correct City Name`
+                }
+            }
+        }
+
+        submitBtn.addEventListener("click",getInfo)
+
+        //For Date and Time
+
+         const DT = document.getElementById("day")
+      const Day = () =>{
+        const currentTime = new Date()
+        var week = []
+        week = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+        const day = week[currentTime.getDay()]
+        return day
+      }
+      const TimeDate = () =>{
+        const currentTime = new Date()
+        // const week = [7]
+        // week[0,1,2,3,4,5,6] = "Sat","Sun","Mon","Tue","Wed","Thu","Fri"
+        // const day = week[currentTime.getDay()]
+
+        //var now = new Date()
+        var mon = []
+        mon = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        // mon[7] = "Jul"
+        // mon[8] = "Aug"
+        // mon[9] = "Sep"
+        let m = mon[currentTime.getMonth()]
+        let dat = currentTime.getDate()
+        let hours = currentTime.getHours()
+        let mins = currentTime.getMinutes()
+        let secs = currentTime.getSeconds()
+        const period = "AM"
+        if(hours>11){
+          periods = "AM"
+          if(hours>12){
+            hours-=12
+            let t = `Time ${hours} : ${mins}: ${secs}`
+          }
+        }
+        if(mins<10){
+          mins = "0"+mins
+        }
+        if (secs <10){
+          secs = "0" + secs
+        }
+        return ` ${m} ${dat} | ${hours} : ${mins} : ${secs} ${period} `
+      }
+        DT.innerHTML = Day()+ TimeDate()
+
+
+
+
+   </script>
+ 
+
+</body>
+</html>
