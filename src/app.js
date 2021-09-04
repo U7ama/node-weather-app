@@ -30,6 +30,6 @@ app.get("/weather",(req,res)=>{
 app.get("*",(req,res)=>{
     res.render("404error")
 })
-app.listen(port,"localhost",()=>{
+app.listen(port,"127.0.0.1",()=>{
     console.log(`Listening to Port ${port}`)
 })
